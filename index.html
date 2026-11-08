@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Supplier Collaboration Hub – Simulasi Paragon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1E2A55; --blue:#1A47B8; --teal:#38C5D5; --teal-soft:#E3F7FA;
+  --bg:#F3F6FB; --surface:#FFFFFF; --line:#DCE3EE; --ink:#1A2238; --muted:#5E6A82;
+  --ok:#1E8E3E; --ok-bg:#E3F5E8; --warn:#A8650F; --warn-bg:#FCF0D9; --bad:#C53030; --bad-bg:#FDE6E6;
+  --info-bg:#E8EFFC;
+  --head:"Lexend", "Segoe UI", system-ui, sans-serif;
+  --body:"Plus Jakarta Sans", "Segoe UI", system-ui, sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --navy:#C9D6FF; --blue:#7FA2FF; --teal:#4FD3E2; --teal-soft:#123A40;
+    --bg:#0F1524; --surface:#18203A; --line:#2A3556; --ink:#E6EBF7; --muted:#9AA6C3;
+    --ok:#5FD07E; --ok-bg:#163423; --warn:#F2B65A; --warn-bg:#3A2C12; --bad:#FF7B7B; --bad-bg:#401C1F;
+    --info-bg:#1D2A50;
+    color-scheme: dark;
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:var(--body);background:var(--bg);color:var(--ink);font-size:15px;line-height:1.5;
+  padding-bottom:env(safe-area-inset-bottom,0px)}
+h1,h2,h3{font-family:var(--head);color:var(--navy);margin:0;line-height:1.25}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+
+/* ---------- Header ---------- */
+header{background:var(--navy);color:#fff;padding:calc(14px + env(safe-area-inset-top,0px)) 20px 0}
+@media (prefers-color-scheme: dark){ header{background:#0B1020} }
+.top{display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between;max-width:1200px;margin:0 auto}
+.brand h1{color:#fff;font-size:20px}
+.brand p{margin:2px 0 0;color:#B9C6EA;font-size:13px}
+.clock{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+  border-radius:14px;padding:8px 8px 8px 14px}
+.clock .day{font-family:var(--head);font-size:15px;line-height:1.2}
+.clock .day small{display:block;font-family:var(--body);font-size:12px;color:#B9C6EA}
+.btn{border:0;border-radius:10px;padding:8px 14px;white-space:nowrap;font-weight:600;cursor:pointer;background:var(--blue);color:#fff}
+.btn:hover{filter:brightness(1.08)}
+.btn.teal{background:var(--teal);color:#0C2A30}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}
+.btn.small{padding:5px 10px;font-size:13px;border-radius:8px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.tabs{display:flex;gap:4px;max-width:1200px;margin:14px auto 0}
+.tab{background:transparent;border:0;color:#B9C6EA;padding:10px 16px;white-space:nowrap;border-radius:12px 12px 0 0;font-weight:600;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--bg);color:var(--navy)}
+
+main{max-width:1200px;margin:0 auto;padding:20px}
+section{margin-bottom:22px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px}
+.panel-head{display:flex;flex-wrap:wrap;gap:8px;align-items:baseline;justify-content:space-between;margin-bottom:12px}
+.panel-head h2{font-size:17px}
+.panel-head p{margin:0;color:var(--muted);font-size:13px}
+
+/* ---------- KPI ---------- */
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px}
+.kpi .label{color:var(--muted);font-size:13px;font-weight:600}
+.kpi .value{font-family:var(--head);font-size:34px;font-weight:700;color:var(--navy);line-height:1.1;margin:6px 0 4px}
+.kpi .sub{font-size:13px;color:var(--muted)}
+.kpi.alert .value{color:var(--bad)}
+.kpi.caution .value{color:var(--warn)}
+.meter{height:8px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:8px}
+.meter span{display:block;height:100%;background:var(--teal)}
+@media (max-width:860px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:480px){.clock{width:100%;flex-wrap:wrap}.clock .day{flex:1 1 100%}.tab{padding:10px 12px}}
+
+/* ---------- Scenario ---------- */
+.scen{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.scen .box{border:1px dashed var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.scen h3{font-size:14px}
+.scen p{margin:0;font-size:12.5px;color:var(--muted)}
+.scen select,.scen input,.form select,.form input[type=number]{width:100%;padding:7px 9px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+.row{display:flex;gap:8px;align-items:center}
+@media (max-width:960px){.scen{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.scen{grid-template-columns:1fr}}
+
+/* ---------- Tables ---------- */
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:720px}
+th{text-align:left;font-size:12.5px;color:var(--muted);font-weight:600;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:11px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+.name{font-weight:700;color:var(--navy)}
+.meta{font-size:12.5px;color:var(--muted)}
+.num{font-variant-numeric:tabular-nums}
+.badge{display:inline-block;padding:3px 10px;border-radius:99px;font-size:12.5px;font-weight:700;white-space:nowrap}
+.b-ok{background:var(--ok-bg);color:var(--ok)} .b-warn{background:var(--warn-bg);color:var(--warn)}
+.b-bad{background:var(--bad-bg);color:var(--bad)} .b-info{background:var(--info-bg);color:var(--blue)}
+.b-mute{background:var(--line);color:var(--muted)}
+.pct{display:flex;align-items:center;gap:8px}
+.pct .bar{flex:1;min-width:50px;height:6px;border-radius:99px;background:var(--line);overflow:hidden}
+.pct .bar span{display:block;height:100%}
+
+/* ---------- Log ---------- */
+.log{list-style:none;margin:0;padding:0;max-height:300px;overflow:auto}
+.log li{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:13.5px}
+.log li:last-child{border-bottom:0}
+.log .d{flex:none;width:58px;color:var(--muted);font-size:12.5px}
+.dot{flex:none;width:9px;height:9px;border-radius:50%;margin-top:6px}
+
+/* ---------- Portal ---------- */
+.portal-top{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between}
+.portal-top select{padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);min-width:240px}
+.grid2{display:grid;grid-template-columns:1.3fr 1fr;gap:18px}
+@media (max-width:860px){.grid2{grid-template-columns:1fr}}
+.req{border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+.req h3{font-size:15px}
+.facts{display:flex;flex-wrap:wrap;gap:6px 18px;margin:8px 0 12px;font-size:13.5px}
+.facts b{color:var(--navy)}
+.choices{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.choices label{flex:1;min-width:110px;border:1px solid var(--line);border-radius:10px;padding:9px 10px;cursor:pointer;font-weight:600;font-size:14px;display:flex;gap:8px;align-items:center}
+.choices input{accent-color:var(--blue)}
+.choices label:has(input:checked){border-color:var(--blue);background:var(--info-bg)}
+.form .fields{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.form label.f{font-size:12.5px;color:var(--muted);font-weight:600;display:flex;flex-direction:column;gap:4px}
+.form .check{display:flex;gap:8px;align-items:center;font-size:13.5px;margin-bottom:10px}
+.err{color:var(--bad);font-size:13px;min-height:1em;margin-bottom:6px}
+.note{background:var(--teal-soft);border-radius:12px;padding:10px 12px;font-size:13.5px;margin-bottom:12px}
+.empty{color:var(--muted);font-size:14px;padding:10px 0}
+
+.refs{font-size:13px;color:var(--muted)}
+.refs p{margin:6px 0}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(20px);
+  background:var(--navy);color:var(--surface);padding:10px 18px;border-radius:12px;font-weight:600;opacity:0;transition:.25s;pointer-events:none;z-index:20}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media (prefers-reduced-motion: reduce){.toast{transition:none}}
+[hidden]{display:none !important}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="top">
+    <div class="brand">
+      <h1>Supplier Collaboration Hub</h1>
+      <p>Simulasi antarmuka pemasok Paragon, Kelompok 42</p>
+    </div>
+    <div class="clock" aria-live="polite">
+      <div class="day" id="clockDay"></div>
+      <button class="btn teal" data-action="step" data-n="1">Maju 1 hari</button>
+      <button class="btn ghost" style="color:#fff;border-color:rgba(255,255,255,.3)" data-action="step" data-n="7">Maju 7 hari</button>
+    </div>
+  </div>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-tab="planner">Dashboard planner</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="portal">Portal pemasok</button>
+  </div>
+</header>
+
+<main>
+  <!-- ================= PLANNER ================= -->
+  <div id="view-planner">
+    <section class="kpis" id="kpis"></section>
+
+
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Supplier</h2>
+        <p>Material, kapasitas, in transit inventory, status konfirmasi, dan reminder per supplier.</p>
+      </div>
+      <div class="scroll"><table id="supTable"></table></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Supplier performance</h2>
+        <p>Diperbarui setiap ada konfirmasi dan kedatangan barang.</p>
+      </div>
+      <div class="scroll"><table id="perfTable"></table></div>
+      <p class="meta" style="margin:10px 0 0">Skor = 30% confirmation rate + 30% on-time delivery rate + 25% fulfillment rate + 15% ETA accuracy. Aman ≥ 90 (pertahankan alokasi), perlu perhatian 75–89 (kirim catatan perbaikan), kritis &lt; 75 (eskalasi/dampingi, alihkan sebagian alokasi).</p>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Detail at risk materials</h2>
+        <p>Proyeksi stok 21 hari dengan ETA terlambat (batas atas rentang).</p>
+      </div>
+      <div class="scroll"><table id="riskTable"></table></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Skenario simulasi</h2>
+        <p>Ubah kondisi, lalu majukan hari untuk melihat dampaknya.</p>
+      </div>
+      <div class="scen">
+        <div class="box">
+          <h3>Kiriman telat</h3>
+          <p>Pilih kiriman yang sedang di jalan dan berapa hari mundurnya.</p>
+          <select id="scDelayShip" aria-label="Kiriman"></select>
+          <div class="row">
+            <input type="number" id="scDelayDays" min="1" max="20" value="5" aria-label="Jumlah hari">
+            <button class="btn small" data-action="delay">Terapkan</button>
+          </div>
+        </div>
+        <div class="box">
+          <h3>Pemasok tidak konfirmasi</h3>
+          <p>Pemasok berhenti membalas, termasuk balasan otomatis dari ERP.</p>
+          <select id="scSilent" aria-label="Pemasok"></select>
+          <button class="btn small" data-action="silent">Aktifkan / matikan</button>
+        </div>
+        <div class="box">
+          <h3>Lonjakan permintaan</h3>
+          <p>Pemakaian harian semua material naik, misalnya karena produk viral.</p>
+          <select id="scDemand" aria-label="Tingkat permintaan">
+            <option value="1">Normal (100%)</option>
+            <option value="1.3">Naik 30%</option>
+            <option value="1.5">Naik 50%</option>
+          </select>
+          <button class="btn small" data-action="demand">Terapkan</button>
+        </div>
+        <div class="box">
+          <h3>Kapasitas pemasok turun</h3>
+          <p>Kapasitas mingguan pemasok terpilih tinggal separuh.</p>
+          <select id="scCap" aria-label="Pemasok"></select>
+          <div class="row">
+            <button class="btn small" data-action="cap">Aktifkan / matikan</button>
+            <button class="btn small ghost" data-action="reset">Reset simulasi</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><h2>Log aktivitas</h2></div>
+      <ul class="log" id="log"></ul>
+    </section>
+
+    <section class="panel refs">
+      <h2 style="font-size:15px;margin-bottom:6px">Dasar rancangan</h2>
+      <p>Agrawal dkk. (2022), <i>International Journal of Production Research</i>: data yang paling penting dibuat terlihat adalah level stok, kapasitas, lead time, status pasokan, dan penyimpangan. Mengelola penyimpangan menjadi pendorong utama visibilitas.</p>
+      <p>Dell’Orto dkk. (2024), <i>Journal of Supply Chain Management Science</i>: control tower berbagi data pemasok dibangun bertahap, dari visibilitas (level 1) ke peringatan (level 2), dan diukur dengan ketepatan pemasok serta backlog.</p>
+    </section>
+  </div>
+
+  <!-- ================= PORTAL ================= -->
+  <div id="view-portal" hidden>
+    <section class="panel">
+      <div class="portal-top">
+        <div>
+          <h2 style="font-size:18px">Portal pemasok</h2>
+          <p class="meta" style="margin:2px 0 0">Masuk sebagai pemasok untuk menjawab permintaan Paragon.</p>
+        </div>
+        <select id="portalSup" aria-label="Masuk sebagai pemasok"></select>
+      </div>
+    </section>
+    <div id="portalBody"></div>
+  </div>
+</main>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/* ===================== DATA AWAL ===================== */
+const START = new Date(2026, 10, 9); // Senin, 9 Nov 2026
+const WAREHOUSE_PALLETS = 200;
+
+function initialState(){
+  return {
+    day: 0, demand: 1, seq: 100,
+    suppliers: [
+      {id:"s1", name:"PT Kimia Nusantara", tier:"Besar", channel:"API", transit:2, spread:1, lateBias:0, cap:6000, capFactor:1, silent:false,
+        hist:{req:24, conf:24, deliv:22, ontime:21, ordered:52000, delivered:51200, etaHit:20}},
+      {id:"s2", name:"PT Aneka Kemasan", tier:"Besar", channel:"API", transit:3, spread:1, lateBias:0, cap:9000, capFactor:1, silent:false,
+        hist:{req:20, conf:19, deliv:18, ontime:16, ordered:40000, delivered:38500, etaHit:15}},
+      {id:"s3", name:"CV Mandiri Packaging", tier:"Menengah", channel:"Berkas", transit:2, spread:1, lateBias:2, cap:5000, capFactor:1, silent:false,
+        hist:{req:18, conf:14, deliv:16, ontime:12, ordered:30000, delivered:27000, etaHit:11}},
+      {id:"s4", name:"PT Global Ingredients", tier:"Besar", channel:"API", transit:21, spread:5, lateBias:2, cap:4000, capFactor:1, silent:false, importer:true,
+        hist:{req:10, conf:9, deliv:9, ontime:6, ordered:20000, delivered:19000, etaHit:5}},
+      {id:"s5", name:"UD Sari Wangi", tier:"UMKM", channel:"Formulir", transit:1, spread:1, lateBias:0, cap:800, capFactor:1, silent:false,
+        hist:{req:15, conf:9, deliv:14, ontime:11, ordered:6000, delivered:5300, etaHit:10}},
+      {id:"s6", name:"CV Botol Jaya", tier:"UMKM", channel:"Formulir", transit:1, spread:1, lateBias:1, cap:1500, capFactor:1, silent:false,
+        hist:{req:12, conf:8, deliv:11, ontime:9, ordered:9000, delivered:8100, etaHit:8}},
+    ],
+    materials: [
+      {id:"m1", name:"Gliserin", unit:"kg", sId:"s1", use:180, stock:2600, lead:5, critical:true, perPallet:800},
+      {id:"m2", name:"Niacinamide (impor)", unit:"kg", sId:"s4", use:25, stock:300, lead:28, critical:true, perPallet:400},
+      {id:"m3", name:"Botol serum 30 ml", unit:"pcs", sId:"s2", use:900, stock:9000, lead:6, critical:false, perPallet:180},
+      {id:"m4", name:"Tube 50 ml", unit:"pcs", sId:"s3", use:700, stock:5200, lead:5, critical:false, perPallet:250},
+      {id:"m5", name:"Ekstrak lidah buaya", unit:"kg", sId:"s5", use:60, stock:420, lead:4, critical:true, perPallet:300},
+      {id:"m6", name:"Tutup pump", unit:"pcs", sId:"s6", use:500, stock:3200, lead:4, critical:false, perPallet:400},
+    ],
+    requests: [
+      {id:"r1", mId:"m1", sId:"s1", qty:2520, sentDay:-1, deadline:0, dueDay:6, status:"full", cQty:2520, shipDay:1, answeredDay:-1, reminders:0, shipped:false, closed:false},
+      {id:"r2", mId:"m3", sId:"s2", qty:6300, sentDay:-6, deadline:-5, dueDay:4, status:"full", cQty:6300, shipDay:-1, answeredDay:-6, reminders:0, shipped:true, closed:false},
+      {id:"r3", mId:"m2", sId:"s4", qty:700, sentDay:-22, deadline:-21, dueDay:9, status:"full", cQty:700, shipDay:-15, answeredDay:-22, reminders:0, shipped:true, closed:false},
+      {id:"r4", mId:"m4", sId:"s3", qty:9800, sentDay:0, deadline:1, dueDay:7, status:"pending", reminders:0, shipped:false, closed:false},
+      {id:"r5", mId:"m5", sId:"s5", qty:840, sentDay:-1, deadline:1, dueDay:5, status:"pending", reminders:0, shipped:false, closed:false},
+      {id:"r6", mId:"m6", sId:"s6", qty:7000, sentDay:0, deadline:2, dueDay:6, status:"pending", reminders:0, shipped:false, closed:false},
+    ],
+    shipments: [
+      {id:"k1", rId:"r2", mId:"m3", sId:"s2", qty:6300, shipDay:-1, etaMin:2, etaMax:3, promisedMin:2, promisedMax:3, arrival:2, delay:0, arrived:false},
+      {id:"k2", rId:"r3", mId:"m2", sId:"s4", qty:700, shipDay:-15, etaMin:6, etaMax:11, promisedMin:6, promisedMax:11, arrival:8, delay:0, arrived:false},
+    ],
+    log: [],
+  };
+}
+let S = initialState();
+
+/* ===================== HELPER ===================== */
+const $ = id => document.getElementById(id);
+const fmt = n => Math.round(n).toLocaleString("id-ID");
+const sup = id => S.suppliers.find(s => s.id === id);
+const mat = id => S.materials.find(m => m.id === id);
+const req = id => S.requests.find(r => r.id === id);
+function dateOf(d, opts){ const x = new Date(START); x.setDate(x.getDate() + d);
+  return x.toLocaleDateString("id-ID", opts || {weekday:"short", day:"numeric", month:"short"}); }
+const shortDate = d => dateOf(d, {day:"numeric", month:"short"});
+const chanLabel = c => ({API:"API dari ERP", Berkas:"Berkas terstruktur", Formulir:"Formulir ponsel"})[c];
+function log(type, text){ S.log.unshift({day:S.day, type, text}); }
+function toast(msg){ const t = $("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(t._h); t._h = setTimeout(()=>t.classList.remove("show"), 2200); }
+
+/* ===================== LOGIKA SIMULASI ===================== */
+function respond(r, status, qty, shipDay, reason, tentative, manual){
+  const s = sup(r.sId), m = mat(r.mId);
+  r.status = status; r.cQty = status === "none" ? 0 : qty; r.shipDay = shipDay;
+  r.reason = reason || ""; r.tentative = !!tentative; r.answeredDay = S.day;
+  s.hist.req++; if (S.day <= r.deadline) s.hist.conf++;
+  const via = manual ? "lewat portal" : (s.channel === "API" ? "otomatis lewat API" : "lewat berkas");
+  if (status === "none"){
+    s.hist.ordered += r.qty; r.closed = true;
+    log("bad", `${s.name} tidak sanggup memenuhi ${m.name} (${reason}). Cari sumber alternatif.`);
+  } else if (status === "partial"){
+    log("warn", `${s.name} konfirmasi sebagian ${m.name}: ${fmt(qty)} dari ${fmt(r.qty)} ${m.unit} ${via}. Alasan: ${reason}.`);
+  } else {
+    log("ok", `${s.name} konfirmasi penuh ${fmt(qty)} ${m.unit} ${m.name} ${via}, kirim ${shortDate(shipDay)}${tentative ? " (tentatif)" : ""}.`);
+  }
+}
+
+function autoRespond(r){
+  const s = sup(r.sId), m = mat(r.mId);
+  const avail = Math.floor(s.cap * s.capFactor);
+  const ship = S.day + Math.max(1, m.lead - s.transit - s.spread);
+  if (avail < r.qty * 0.1) respond(r, "none", 0, ship, "Kapasitas penuh");
+  else if (avail < r.qty) respond(r, "partial", avail, ship, "Kapasitas penuh");
+  else respond(r, "full", r.qty, ship);
+}
+
+function runAutoResponses(){
+  S.requests.filter(r => r.status === "pending").forEach(r => {
+    const s = sup(r.sId); if (s.silent) return;
+    if (s.channel === "API" && S.day >= r.sentDay) autoRespond(r);
+    else if (s.channel === "Berkas" && S.day >= r.sentDay + 1) autoRespond(r);
+  });
+}
+
+function openQty(mId){ // barang dalam perjalanan + sudah dikonfirmasi tapi belum dikirim
+  let q = 0;
+  S.shipments.forEach(k => { if (k.mId === mId && !k.arrived) q += k.qty; });
+  S.requests.forEach(r => { if (r.mId === mId && !r.closed && !r.shipped && (r.status === "full" || r.status === "partial")) q += r.cQty; });
+  return q;
+}
+
+function step(){
+  S.day++;
+  const d = S.day;
+  // 1. Kedatangan barang
+  S.shipments.filter(k => !k.arrived && k.arrival === d).forEach(k => {
+    const m = mat(k.mId), s = sup(k.sId), r = req(k.rId);
+    k.arrived = true; m.stock += k.qty; m.outLogged = false;
+    s.hist.deliv++; s.hist.delivered += k.qty; s.hist.ordered += r.qty;
+    if (d <= r.dueDay) s.hist.ontime++;
+    if (d >= k.promisedMin && d <= k.promisedMax) s.hist.etaHit++;
+    r.closed = true;
+    log(d <= r.dueDay ? "ok" : "warn", `${fmt(k.qty)} ${m.unit} ${m.name} dari ${s.name} tiba di gudang RMPM${d > r.dueDay ? ", terlambat dari tanggal butuh" : ""}.`);
+  });
+  // 2. Pemakaian produksi
+  S.materials.forEach(m => {
+    m.stock = Math.max(0, m.stock - m.use * S.demand);
+    if (m.stock === 0 && !m.outLogged){ m.outLogged = true; log("bad", `Stok ${m.name} habis. Produksi yang memakai material ini terganggu.`); }
+  });
+  // 3. Pemasok mengirim barang yang sudah dikonfirmasi
+  S.requests.filter(r => !r.shipped && !r.closed && (r.status === "full" || r.status === "partial") && r.shipDay <= d).forEach(r => {
+    const s = sup(r.sId), m = mat(r.mId);
+    const etaMin = d + s.transit, etaMax = etaMin + s.spread;
+    S.shipments.push({id:"k"+(++S.seq), rId:r.id, mId:r.mId, sId:r.sId, qty:r.cQty, shipDay:d, etaMin, etaMax,
+      promisedMin:etaMin, promisedMax:etaMax, arrival:etaMin + s.lateBias, delay:0, arrived:false});
+    r.shipped = true;
+    log("info", `${s.name} mengirim ${fmt(r.cQty)} ${m.unit} ${m.name}. ETA ${shortDate(etaMin)}–${shortDate(etaMax)}.`);
+  });
+  // 4. Pengingat otomatis & eskalasi
+  S.requests.filter(r => r.status === "pending" && d > r.deadline).forEach(r => {
+    const s = sup(r.sId), m = mat(r.mId);
+    r.reminders++;
+    if (r.reminders === 3) log("bad", `${s.name} belum menjawab ${m.name} setelah 3 pengingat. Eskalasi ke procurement${s.tier === "UMKM" ? " dan dampingi pengisian" : ""}.`);
+    else log("warn", `Pengingat otomatis ke-${r.reminders} terkirim ke ${s.name} (${m.name}).`);
+  });
+  // 5. Call off baru saat stok menyentuh ROP
+  S.materials.forEach(m => {
+    const hasPending = S.requests.some(r => r.mId === m.id && r.status === "pending");
+    if (hasPending) return;
+    const rop = m.use * S.demand * (m.lead + 3);
+    if (m.stock + openQty(m.id) < rop){
+      const s = sup(m.sId);
+      const qty = Math.ceil(m.use * S.demand * 14 / 10) * 10;
+      S.requests.push({id:"r"+(++S.seq), mId:m.id, sId:m.sId, qty, sentDay:d, deadline:d + (s.channel === "Formulir" ? 2 : 1),
+        dueDay:d + m.lead + 1, status:"pending", reminders:0, shipped:false, closed:false});
+      log("info", `Stok ${m.name} menyentuh ROP. Permintaan ${fmt(qty)} ${m.unit} dikirim ke ${s.name} lewat ${chanLabel(s.channel).toLowerCase()}.`);
+    }
+  });
+  // 6. Balasan otomatis (API hari yang sama, berkas H+1)
+  runAutoResponses();
+}
+
+/* ===================== PERHITUNGAN DASHBOARD ===================== */
+function projection(m){
+  const f = S.demand; let s = m.stock;
+  const inc = {};
+  S.shipments.forEach(k => { if (k.mId === m.id && !k.arrived){ const day = Math.max(k.etaMax, S.day + 1); inc[day] = (inc[day]||0) + k.qty; }});
+  S.requests.forEach(r => { if (r.mId === m.id && !r.closed && !r.shipped && (r.status === "full" || r.status === "partial")){
+    const sp = sup(r.sId); const day = Math.max(r.shipDay, S.day + 1) + sp.transit + sp.spread; inc[day] = (inc[day]||0) + r.cQty; }});
+  if (s <= 0) return 0;
+  for (let i = 1; i <= 21; i++){
+    s += inc[S.day + i] || 0;
+    s -= m.use * f;
+    if (s < 0) return i;
+  }
+  return null;
+}
+
+function riskOf(m){
+  const out = projection(m);
+  const r = S.requests.filter(x => x.mId === m.id && !x.closed).sort((a,b)=>b.sentDay-a.sentDay)[0];
+  const ship = S.shipments.filter(k => k.mId === m.id && !k.arrived).sort((a,b)=>a.etaMin-b.etaMin)[0];
+  const level = out === null ? "Aman" : out <= 7 ? "Kritis" : out <= 14 ? "Waspada" : "Aman";
+  const causes = [], actions = [];
+  if (m.stock <= 0) causes.push("Stok sudah habis");
+  if (r && r.status === "pending") causes.push(S.day > r.deadline ? `Konfirmasi lewat tenggat (${r.reminders} pengingat)` : "Konfirmasi belum masuk");
+  if (r && r.status === "partial") causes.push(`Konfirmasi sebagian: ${r.reason}`);
+  if (r && r.tentative) causes.push("Jawaban tentatif");
+  if (ship && ship.delay > 0) causes.push(`Kiriman mundur ${ship.delay} hari`);
+  if (!causes.length && level !== "Aman") causes.push("Stok habis sebelum kiriman tiba");
+  if (level !== "Aman"){
+    if (r && r.status === "pending") actions.push(sup(m.sId).tier === "UMKM" ? "Hubungi dan dampingi pemasok" : "Eskalasi ke procurement");
+    if ((r && r.status === "partial") || (ship && ship.delay > 0)) actions.push("Cari sumber alternatif");
+    if (level === "Kritis") actions.push("Atur ulang prioritas produksi");
+    else actions.push("Pantau harian");
+  }
+  return {level, out, causes, actions, ship};
+}
+
+function perf(s){
+  const h = s.hist;
+  const overdue = S.requests.filter(r => r.sId === s.id && r.status === "pending" && S.day > r.deadline).length;
+  const conf = h.conf / Math.max(1, h.req + overdue);
+  const ontime = h.ontime / Math.max(1, h.deliv);
+  const fulfil = h.delivered / Math.max(1, h.ordered);
+  const eta = h.etaHit / Math.max(1, h.deliv);
+  const score = Math.round((conf*.30 + ontime*.30 + fulfil*.25 + eta*.15) * 100);
+  let status, action;
+  if (score >= 90){ status = "Aman"; action = "Pertahankan alokasi"; }
+  else if (score >= 75){ status = "Perlu perhatian"; action = "Kirim catatan perbaikan"; }
+  else { status = "Kritis"; action = s.tier === "UMKM" ? "Dampingi pemasok, alihkan sebagian alokasi" : "Eskalasi, alihkan sebagian alokasi"; }
+  return {conf, ontime, fulfil, eta, score, status, action};
+}
+
+/* ===================== RENDER ===================== */
+const badgeCls = l => ({Aman:"b-ok", Waspada:"b-warn", "Perlu perhatian":"b-warn", Kritis:"b-bad"})[l] || "b-mute";
+function pctCell(v){
+  const p = Math.round(v*100); const c = p >= 90 ? "var(--ok)" : p >= 75 ? "var(--warn)" : "var(--bad)";
+  return `<div class="pct num"><span style="width:38px">${p}%</span><div class="bar"><span style="width:${Math.min(100,p)}%;background:${c}"></span></div></div>`;
+}
+
+function renderClock(){
+  $("clockDay").innerHTML = `Hari ke-${S.day + 1}<small>${dateOf(S.day, {weekday:"long", day:"numeric", month:"long", year:"numeric"})}</small>`;
+}
+
+function renderKpis(){
+  const risks = S.materials.map(riskOf);
+  const krit = risks.filter(r => r.level === "Kritis").length, wasp = risks.filter(r => r.level === "Waspada").length;
+  const pending = S.requests.filter(r => r.status === "pending");
+  const late = pending.filter(r => S.day > r.deadline).length;
+  const pallets = S.materials.reduce((a,m) => a + Math.ceil(m.stock / m.perPallet), 0);
+  const util = pallets / WAREHOUSE_PALLETS;
+  const ch = c => S.suppliers.filter(s => s.channel === c).length;
+  $("kpis").innerHTML = `
+    <div class="kpi"><div class="label">Total supplier</div><div class="value num">${S.suppliers.length}</div>
+      <div class="sub">${ch("API")} API, ${ch("Berkas")} berkas, ${ch("Formulir")} formulir ponsel</div></div>
+    <div class="kpi ${krit ? "alert" : wasp ? "caution" : ""}"><div class="label">At risk materials</div><div class="value num">${krit + wasp}</div>
+      <div class="sub">${krit} kritis, ${wasp} waspada dari ${S.materials.length} material</div></div>
+    <div class="kpi ${late ? "alert" : pending.length ? "caution" : ""}"><div class="label">Pending confirmation</div><div class="value num">${pending.length}</div>
+      <div class="sub">${late} sudah lewat tenggat</div></div>
+    <div class="kpi"><div class="label">Kapasitas inventori Paragon</div><div class="value num">${Math.round(util*100)}%</div>
+      <div class="sub">${pallets} dari ${WAREHOUSE_PALLETS} posisi palet gudang RMPM terisi</div>
+      <div class="meter"><span style="width:${Math.min(100, util*100)}%;${util > .85 ? "background:var(--bad)" : ""}"></span></div></div>`;
+}
+
+function renderRisk(){
+  const rows = S.materials.map(m => ({m, r: riskOf(m)}))
+    .sort((a,b) => (a.r.out ?? 99) - (b.r.out ?? 99));
+  $("riskTable").innerHTML = `<thead><tr><th>Material</th><th>Stok RMPM</th><th>Cukup sampai</th><th>Kiriman berikutnya</th><th>Status</th><th>Penyebab dan saran</th></tr></thead><tbody>` +
+    rows.map(({m, r}) => {
+      const cover = m.stock / (m.use * S.demand);
+      const ship = r.ship ? `${fmt(r.ship.qty)} ${m.unit}<div class="meta">ETA ${shortDate(r.ship.etaMin)}–${shortDate(r.ship.etaMax)}</div>` : `<span class="meta">Belum ada</span>`;
+      return `<tr><td><div class="name">${m.name}</div><div class="meta">${sup(m.sId).name}${m.critical ? ", item kritis" : ""}</div></td>
+        <td class="num">${fmt(m.stock)} ${m.unit}<div class="meta">${fmt(m.use*S.demand)} ${m.unit}/hari</div></td>
+        <td class="num">${cover.toFixed(1).replace(".", ",")} hari${r.out !== null ? `<div class="meta">habis ${shortDate(S.day + r.out)}</div>` : ""}</td>
+        <td class="num">${ship}</td>
+        <td><span class="badge ${badgeCls(r.level)}">${r.level}</span></td>
+        <td>${r.causes.length ? r.causes.join("; ") : '<span class="meta">Tidak ada masalah</span>'}${r.actions.length ? `<div class="meta">Saran: ${r.actions.join(", ")}</div>` : ""}</td></tr>`;
+    }).join("") + `</tbody>`;
+}
+
+function confCell(r, m){
+  if (!r) return `<span class="badge b-mute">Tidak ada permintaan</span>`;
+  const map = {pending:["Belum jawab","b-bad"], full:["Penuh","b-ok"], partial:["Sebagian","b-warn"], none:["Tidak sanggup","b-bad"]};
+  const [t, c] = map[r.status];
+  let det = `${fmt(r.qty)} ${m.unit}, butuh ${shortDate(r.dueDay)}`;
+  if (r.status === "pending") det = `${fmt(r.qty)} ${m.unit}, tenggat jawab ${shortDate(r.deadline)}${S.day > r.deadline ? " (lewat)" : ""}`;
+  if (r.status === "partial") det = `${fmt(r.cQty)} dari ${fmt(r.qty)} ${m.unit}, ${r.reason}`;
+  if (r.status === "full") det = `${fmt(r.cQty)} ${m.unit}, kirim ${shortDate(r.shipDay)}${r.tentative ? ", tentatif" : ""}`;
+  if (r.status === "none") det = r.reason;
+  return `<span class="badge ${c}">${t}</span><div class="meta">${det}</div>`;
+}
+
+function renderSuppliers(){
+  $("supTable").innerHTML = `<thead><tr><th>Supplier</th><th>Material</th><th>Kapasitas supplier</th><th>In transit inventory</th><th>Status konfirmasi</th><th>Reminder</th></tr></thead><tbody>` +
+    S.suppliers.map(s => {
+      const ms = S.materials.filter(m => m.sId === s.id);
+      const m = ms[0];
+      const r = S.requests.filter(x => x.sId === s.id).sort((a,b)=>b.sentDay-a.sentDay || (b.id > a.id ? 1 : -1))[0];
+      const ks = S.shipments.filter(k => k.sId === s.id && !k.arrived);
+      const transit = ks.length ? ks.map(k => `${fmt(k.qty)} ${m.unit}<div class="meta">ETA ${shortDate(k.etaMin)}–${shortDate(k.etaMax)}${k.delay ? `, mundur ${k.delay} hari` : ""}</div>`).join("") : '<span class="meta">Tidak ada</span>';
+      const flags = [s.silent ? '<span class="badge b-bad">Tidak membalas</span>' : "", s.capFactor < 1 ? '<span class="badge b-warn">Kapasitas turun</span>' : ""].join(" ");
+      const pend = r && r.status === "pending";
+      return `<tr><td><div class="name">${s.name}</div><div class="meta">${s.tier}, ${chanLabel(s.channel)}</div>${flags.trim() ? `<div style="margin-top:4px">${flags}</div>` : ""}</td>
+        <td>${ms.map(x => x.name).join(", ")}</td>
+        <td class="num">${fmt(s.cap * s.capFactor)} ${m.unit}<div class="meta">per minggu</div></td>
+        <td class="num">${transit}</td>
+        <td>${confCell(r, m)}</td>
+        <td>${pend ? `<button class="btn small" data-action="remind" data-rid="${r.id}">Kirim reminder</button><div class="meta">${r.reminders}× terkirim</div>` : '<span class="meta">Tidak perlu reminder</span>'}</td></tr>`;
+    }).join("") + `</tbody>`;
+}
+
+function renderPerf(){
+  $("perfTable").innerHTML = `<thead><tr><th>Supplier</th><th>Confirmation rate</th><th>On-time delivery rate</th><th>Fulfillment rate</th><th>ETA accuracy</th><th>Skor</th><th>Status (tindakan Paragon)</th></tr></thead><tbody>` +
+    S.suppliers.map(s => { const p = perf(s);
+      return `<tr><td><div class="name">${s.name}</div><div class="meta">${s.tier}</div></td>
+        <td>${pctCell(p.conf)}</td><td>${pctCell(p.ontime)}</td><td>${pctCell(p.fulfil)}</td><td>${pctCell(p.eta)}</td>
+        <td class="num"><b>${p.score}</b></td>
+        <td><span class="badge ${badgeCls(p.status)}">${p.status}</span><div class="meta">${p.action}</div></td></tr>`; }).join("") + `</tbody>`;
+}
+
+function renderLog(){
+  const col = {ok:"var(--ok)", warn:"var(--warn)", bad:"var(--bad)", info:"var(--blue)"};
+  $("log").innerHTML = S.log.length ? S.log.slice(0, 80).map(e =>
+    `<li><span class="d">${shortDate(e.day)}</span><span class="dot" style="background:${col[e.type]}"></span><span>${e.text}</span></li>`).join("")
+    : `<li class="empty">Belum ada aktivitas. Tekan “Maju 1 hari” untuk menjalankan simulasi.</li>`;
+}
+
+function renderScenarioOptions(){
+  const ks = S.shipments.filter(k => !k.arrived);
+  const prev = $("scDelayShip").value;
+  $("scDelayShip").innerHTML = ks.length ? ks.map(k => `<option value="${k.id}">${mat(k.mId).name}, ${sup(k.sId).name}</option>`).join("") : `<option value="">Tidak ada kiriman di jalan</option>`;
+  if (ks.some(k => k.id === prev)) $("scDelayShip").value = prev;
+  ["scSilent", "scCap"].forEach(id => {
+    const v = $(id).value;
+    $(id).innerHTML = S.suppliers.map(s => `<option value="${s.id}">${s.name}${id === "scSilent" && s.silent ? " (tidak membalas)" : ""}${id === "scCap" && s.capFactor < 1 ? " (kapasitas turun)" : ""}</option>`).join("");
+    if (v) $(id).value = v;
+  });
+  $("scDemand").value = String(S.demand);
+}
+
+/* ---------- Portal pemasok ---------- */
+function renderPortal(){
+  const sel = $("portalSup");
+  const v = sel.value || "s5";
+  sel.innerHTML = S.suppliers.map(s => `<option value="${s.id}">${s.name} (${s.tier})</option>`).join("");
+  sel.value = v;
+  const s = sup(v), m = S.materials.find(x => x.sId === s.id);
+  const pend = S.requests.filter(r => r.sId === s.id && r.status === "pending");
+  const done = S.requests.filter(r => r.sId === s.id && r.status !== "pending").sort((a,b)=>b.answeredDay-a.answeredDay).slice(0,5);
+  const ks = S.shipments.filter(k => k.sId === s.id && !k.arrived);
+  const p = perf(s);
+
+  const note = s.channel === "API"
+    ? `<div class="note">Pemasok ini terhubung lewat API, jadi ERP-nya membalas otomatis. Form di bawah dipakai untuk mencoba jawaban manual.</div>`
+    : s.channel === "Berkas"
+    ? `<div class="note">Pemasok ini biasanya mengunggah berkas terstruktur dan dibaca Hub H+1. Form di bawah mewakili isi berkas itu.</div>`
+    : `<div class="note">Cukup isi satu formulir pendek dari ponsel. Kalau belum pasti, centang “jawaban tentatif”.</div>`;
+
+  const shipOpts = Array.from({length:14}, (_,i) => S.day + 1 + i).map(d => `<option value="${d}">${dateOf(d)}</option>`).join("");
+  const forms = pend.length ? pend.map(r => `
+    <form class="req form" data-rid="${r.id}">
+      <h3>${m.name}</h3>
+      <div class="facts">
+        <span>Jumlah diminta <b class="num">${fmt(r.qty)} ${m.unit}</b></span>
+        <span>Dibutuhkan <b>${dateOf(r.dueDay)}</b></span>
+        <span>Jawab sebelum <b>${dateOf(r.deadline)}</b>${S.day > r.deadline ? ' <span class="badge b-bad">Lewat tenggat</span>' : ""}</span>
+      </div>
+      <div class="choices" role="radiogroup" aria-label="Bisa memenuhi?">
+        <label><input type="radio" name="st" value="full" checked> Penuh</label>
+        <label><input type="radio" name="st" value="partial"> Sebagian</label>
+        <label><input type="radio" name="st" value="none"> Tidak sanggup</label>
+      </div>
+      <div class="fields">
+        <label class="f">Jumlah yang sanggup (${m.unit})<input type="number" name="qty" min="1" max="${r.qty}" value="${r.qty}"></label>
+        <label class="f">Tanggal kirim<select name="ship">${shipOpts}</select></label>
+        <label class="f" style="grid-column:1/-1">Alasan (wajib jika tidak penuh)
+          <select name="reason"><option value="">Pilih alasan</option><option>Kapasitas penuh</option><option>Bahan baku pemasok kurang</option><option>Lead time tidak cukup</option><option>Kendala pengiriman</option></select></label>
+      </div>
+      <label class="check"><input type="checkbox" name="tent"> Jawaban tentatif, akan dipastikan lagi</label>
+      <div class="err" aria-live="polite"></div>
+      <button class="btn" type="submit">Kirim konfirmasi</button>
+    </form>`).join("") : `<div class="panel empty">Tidak ada permintaan yang menunggu jawaban. Majukan hari di dashboard sampai stok menyentuh ROP.</div>`;
+
+  const shipList = ks.length ? ks.map(k => `
+    <div class="req"><div class="name">${fmt(k.qty)} ${m.unit} ${m.name}</div>
+      <div class="meta">Dikirim ${shortDate(k.shipDay)}, ETA ${shortDate(k.etaMin)}–${shortDate(k.etaMax)}${k.delay ? `, sudah mundur ${k.delay} hari` : ""}</div>
+      <div class="row" style="margin-top:8px"><input type="number" min="1" max="20" value="2" id="lateDays-${k.id}" aria-label="Hari terlambat" style="width:80px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--surface)">
+      <button class="btn small ghost" data-action="report-late" data-kid="${k.id}">Laporkan keterlambatan (hari)</button></div></div>`).join("")
+    : `<p class="empty">Tidak ada kiriman yang sedang berjalan.</p>`;
+
+  const hist = done.length ? done.map(r => {
+    const t = {full:"Penuh", partial:"Sebagian", none:"Tidak sanggup"}[r.status];
+    return `<li><span class="d">${shortDate(r.answeredDay)}</span><span>${t}: ${fmt(r.cQty)} dari ${fmt(r.qty)} ${m.unit}${r.reason ? `, ${r.reason}` : ""}</span></li>`; }).join("")
+    : `<li class="empty">Belum ada riwayat.</li>`;
+
+  $("portalBody").innerHTML = `
+    <div class="grid2">
+      <section>
+        <div class="panel">
+          <div class="panel-head"><h2>Permintaan dari Paragon</h2><p>${chanLabel(s.channel)}</p></div>
+          ${note}${forms}
+        </div>
+      </section>
+      <section>
+        <div class="panel" style="margin-bottom:18px">
+          <div class="panel-head"><h2>Kapasitas minggu ini</h2></div>
+          <div class="row"><input type="number" id="capInput" min="0" value="${Math.round(s.cap * s.capFactor)}" aria-label="Kapasitas mingguan" style="flex:1;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface)">
+          <span class="meta">${m.unit}</span><button class="btn small" data-action="save-cap" data-sid="${s.id}">Simpan</button></div>
+        </div>
+        <div class="panel" style="margin-bottom:18px">
+          <div class="panel-head"><h2>Kiriman berjalan</h2></div>${shipList}
+        </div>
+        <div class="panel" style="margin-bottom:18px">
+          <div class="panel-head"><h2>Rapor Anda</h2><span class="badge ${badgeCls(p.status)}">${p.status}, skor ${p.score}</span></div>
+          <div class="meta">Konfirmasi ${Math.round(p.conf*100)}%, tepat waktu ${Math.round(p.ontime*100)}%, pemenuhan ${Math.round(p.fulfil*100)}%, akurasi ETA ${Math.round(p.eta*100)}%.</div>
+        </div>
+        <div class="panel"><div class="panel-head"><h2>Riwayat konfirmasi</h2></div><ul class="log">${hist}</ul></div>
+      </section>
+    </div>`;
+}
+
+function render(){
+  renderClock(); renderKpis(); renderRisk(); renderSuppliers(); renderPerf(); renderLog(); renderScenarioOptions();
+  if (!$("view-portal").hidden) renderPortal();
+}
+
+/* ===================== INTERAKSI ===================== */
+function delayShipment(k, days, fromSupplier){
+  const m = mat(k.mId), s = sup(k.sId);
+  k.arrival += days; k.etaMin += days; k.etaMax += days; k.delay += days;
+  log("bad", `Pengecualian: kiriman ${m.name} dari ${s.name} mundur ${days} hari${fromSupplier ? " (dilaporkan pemasok)" : ""}. ETA baru ${shortDate(k.etaMin)}–${shortDate(k.etaMax)}.`);
+}
+
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-action],[data-tab]");
+  if (!b) return;
+  if (b.dataset.tab){
+    document.querySelectorAll(".tab").forEach(t => t.setAttribute("aria-selected", t === b ? "true" : "false"));
+    $("view-planner").hidden = b.dataset.tab !== "planner";
+    $("view-portal").hidden = b.dataset.tab !== "portal";
+    render(); return;
+  }
+  const a = b.dataset.action;
+  if (a === "step"){ for (let i = 0; i < +b.dataset.n; i++) step(); toast(`Simulasi maju ke ${dateOf(S.day)}`); }
+  if (a === "remind"){ const r = req(b.dataset.rid); r.reminders++; log("info", `Planner mengirim pengingat ke ${sup(r.sId).name} (${mat(r.mId).name}).`); toast("Pengingat terkirim"); }
+  if (a === "delay"){ const k = S.shipments.find(x => x.id === $("scDelayShip").value); const d = Math.max(1, Math.min(20, +$("scDelayDays").value || 1));
+    if (!k){ toast("Tidak ada kiriman di jalan"); return; } delayShipment(k, d); toast("Skenario kiriman telat diterapkan"); }
+  if (a === "silent"){ const s = sup($("scSilent").value); s.silent = !s.silent;
+    log(s.silent ? "bad" : "ok", s.silent ? `Skenario: ${s.name} berhenti membalas permintaan.` : `${s.name} kembali aktif membalas.`);
+    if (!s.silent) runAutoResponses(); toast(s.silent ? "Pemasok berhenti membalas" : "Pemasok aktif lagi"); }
+  if (a === "demand"){ S.demand = +$("scDemand").value; log(S.demand > 1 ? "warn" : "info", `Skenario: pemakaian harian ${S.demand > 1 ? "naik " + Math.round((S.demand-1)*100) + "%" : "kembali normal"}.`); toast("Tingkat permintaan diperbarui"); }
+  if (a === "cap"){ const s = sup($("scCap").value); s.capFactor = s.capFactor < 1 ? 1 : 0.5;
+    log(s.capFactor < 1 ? "warn" : "info", `Skenario: kapasitas ${s.name} ${s.capFactor < 1 ? "turun 50%" : "kembali normal"}.`); toast("Kapasitas pemasok diperbarui"); }
+  if (a === "reset"){ S = initialState(); toast("Simulasi kembali ke awal"); }
+  if (a === "report-late"){ const k = S.shipments.find(x => x.id === b.dataset.kid); const d = Math.max(1, Math.min(20, +$("lateDays-" + k.id).value || 1));
+    delayShipment(k, d, true); toast("Keterlambatan dilaporkan ke Paragon"); }
+  if (a === "save-cap"){ const s = sup(b.dataset.sid); const v = Math.max(0, +$("capInput").value || 0); s.cap = v; s.capFactor = 1;
+    log("info", `${s.name} memperbarui kapasitas mingguan menjadi ${fmt(v)}.`); toast("Kapasitas tersimpan"); }
+  render();
+});
+
+document.addEventListener("submit", e => {
+  const f = e.target.closest("form[data-rid]"); if (!f) return;
+  e.preventDefault();
+  const r = req(f.dataset.rid);
+  const st = f.st.value, qty = +f.qty.value, ship = +f.ship.value, reason = f.reason.value, tent = f.tent.checked;
+  const err = f.querySelector(".err");
+  if (st !== "full" && !reason){ err.textContent = "Pilih alasan karena jawaban tidak penuh."; return; }
+  if (st === "partial" && (!(qty > 0) || qty >= r.qty)){ err.textContent = `Isi jumlah antara 1 dan ${fmt(r.qty - 1)} untuk jawaban sebagian.`; return; }
+  respond(r, st, st === "full" ? r.qty : qty, ship, reason, tent, true);
+  toast("Konfirmasi terkirim ke Paragon");
+  render();
+});
+
+document.addEventListener("change", e => {
+  if (e.target.id === "portalSup") renderPortal();
+  const f = e.target.closest("form[data-rid]");
+  if (f && e.target.name === "st"){ const q = f.qty; const r = req(f.dataset.rid);
+    if (e.target.value === "full") q.value = r.qty; if (e.target.value === "partial") q.value = Math.round(r.qty / 2); }
+});
+
+log("info", "Simulasi dimulai. Tiga permintaan menunggu jawaban pemasok.");
+render();
+</script>
+</body>
+</html>
