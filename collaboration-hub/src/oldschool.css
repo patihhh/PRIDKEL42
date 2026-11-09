@@ -1,0 +1,40 @@
+/* Old school: bilah judul metalik, kilap dua nada, seleksi bergradien. Semua warna dari tokens.css. */
+
+/* Bilah judul panel */
+.panel{padding:var(--space-md);overflow:hidden}
+.panel-head{margin:calc(var(--space-md) * -1) calc(var(--space-md) * -1) var(--space-sm);padding:var(--space-xs) var(--space-md);background:var(--th-face);border-bottom:var(--rule-hair) solid var(--sheet-edge);box-shadow:inset 0 1px 0 var(--highlight)}
+.panel-head h2{text-shadow:var(--emboss-light)}
+.panel-head p{color:var(--color-ink-2)}
+
+/* Label status bergradien */
+.tag{border:var(--rule-hair) solid var(--tag-edge)}
+.tag-ok{background:var(--z-p-face);color:var(--color-accent-ink);text-shadow:var(--deboss-dark)}
+.tag-warn{background:var(--z-s-face);color:var(--on-z-s);text-shadow:var(--emboss-light)}
+.tag-bad{background:var(--bad-face);color:var(--color-accent-ink);text-shadow:var(--deboss-dark)}
+.tag-info{background:var(--btn-face);color:var(--color-accent-ink);text-shadow:var(--deboss-dark)}
+.tag-mute{background:var(--z-g-face);color:var(--color-accent-ink);text-shadow:var(--deboss-dark)}
+
+/* Seleksi menu */
+.sidenav a{border:var(--rule-hair) solid transparent}
+.sidenav a:hover{background:var(--nav-hover);border-color:var(--well-dark)}
+.sidenav a.on{background:var(--btn-face);border-color:var(--btn-edge);box-shadow:var(--lift-btn);color:var(--color-accent-ink)}
+.sidenav a:active{background:var(--btn-face-press);box-shadow:var(--inset-press)}
+.ab-btn[aria-pressed="true"]{background:var(--btn-face-press);border-color:var(--btn-edge)}
+
+/* Kartu angka */
+.stats{background-image:var(--grain-sheet),var(--stat-face)}
+.stat-l{color:var(--color-ink-2)}
+
+/* Baris tabel berselang */
+.tbl tbody tr:nth-child(even):not(.row-flag):not(.row-edit) td:not(.c):not(.bad){background:var(--row-alt)}
+.tbl tbody tr:hover td:not(.c):not(.bad){background:var(--row-hover)}
+
+/* Tab portal */
+.p-nav button.on{background:var(--btn-face);color:var(--color-accent-ink);text-shadow:var(--deboss-dark);box-shadow:inset 0 1px 0 var(--highlight-soft)}
+.p-nav button:hover:not(.on){background:var(--btn2-face-hover)}
+.p-card .p-title,.zone-n{text-shadow:var(--emboss-light)}
+.dr-head,.p-sheet-t{text-shadow:var(--emboss-light)}
+
+/* Teks di atas kuning tanpa bayangan supaya tetap tajam */
+.grid th.z-s,.grid th.z-s2,.grid td.c-s,.tbl tbody tr:hover td.c-s,.tag-warn,.zone-h.z-s{text-shadow:none}
+.c-s .c-edit button,.grid td.c-s button{text-shadow:none}

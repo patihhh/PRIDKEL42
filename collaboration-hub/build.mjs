@@ -1,0 +1,15 @@
+// Membundel app ke dist/: index.html, app.js, app.css. Bisa dibuka langsung tanpa server.
+import { build } from "esbuild";
+import { writeFileSync, mkdirSync } from "node:fs";
+mkdirSync("dist", { recursive: true });
+await build({ entryPoints: { app: "src/main.jsx" }, bundle: true, minify: true, format: "iife", outdir: "dist", jsx: "automatic",
+  define: { "process.env.NODE_ENV": '"production"' }, logLevel: "error" });
+writeFileSync("dist/index.html", `<!doctype html>
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Supplier Collaboration Hub, prototipe Kelompok 42</title>
+<meta name="description" content="Prototipe Collaboration Hub: konfirmasi pemasok dan papan komitmen untuk planner Paragon. Data ilustrasi.">
+<link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app.css"></head><body><div id="root"></div><script src="app.js"></script></body></html>
+`);
+console.log("ok");

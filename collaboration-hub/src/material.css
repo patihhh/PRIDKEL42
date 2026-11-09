@@ -1,0 +1,165 @@
+/* Lapisan material: meja bertekstur, lembar kerja terangkat, kontrol yang bisa ditekan, sumur yang tertanam.
+   Semua warna berasal dari token di tokens.css. */
+
+/* Meja dan kerangka */
+.content{background-color:var(--color-paper);background-image:var(--grain-desk),var(--desk-shade);background-size:200px 200px,100% 100%}
+.appbar{position:relative;z-index:var(--z-sticky);background-image:var(--grain-on-dark),var(--bar-face);background-size:200px 200px,100% 100%;box-shadow:var(--lift-bar)}
+.appname{text-shadow:var(--deboss-dark)}
+.ab-btn:hover{border-color:transparent;background:var(--well-dark);box-shadow:var(--inset-dark)}
+.ab-btn[aria-pressed="true"]{background:var(--well-dark);color:var(--color-accent-ink);box-shadow:var(--inset-dark)}
+.sidenav{position:relative;z-index:var(--z-raised);background-color:var(--color-shell);background-image:var(--grain-on-dark),var(--shell-face);background-size:200px 200px,100% 100%;border-right:0;box-shadow:var(--lift-side)}
+.sidenav a{color:var(--color-on-shell);text-shadow:var(--deboss-dark)}
+.sidenav a:hover{background:var(--well-dark-soft)}
+.sidenav a.on{background:var(--well-dark);color:var(--color-accent-ink);box-shadow:var(--inset-dark)}
+.sidenav em{background:var(--z-s);color:var(--on-z-s);text-shadow:none;font-weight:700;box-shadow:var(--edge-chip)}
+
+/* Lembar kerja */
+.page-head h1{text-shadow:var(--emboss-light)}
+.page-head p{color:var(--color-ink-2)}
+.field-inline{color:var(--color-ink)}
+.panel,.stats{background-color:var(--color-plate);background-image:var(--grain-sheet),var(--sheet-face);background-size:200px 200px,100% 100%;border:var(--rule-hair) solid var(--sheet-edge);box-shadow:var(--lift-sheet)}
+.stat + .stat{border-left-color:var(--sheet-seam);box-shadow:inset 1px 0 0 var(--highlight)}
+.stat-v{text-shadow:var(--emboss-light)}
+
+/* Tombol */
+.btn{transition:background-color var(--dur-micro) var(--ease-out),box-shadow var(--dur-micro) var(--ease-out),transform var(--dur-micro) var(--ease-out)}
+.btn-primary{background:var(--btn-face);border-color:var(--btn-edge);box-shadow:var(--lift-btn);text-shadow:var(--deboss-dark)}
+.btn-primary:hover{background:var(--btn-face-hover)}
+.btn-secondary{background:var(--btn2-face);border-color:var(--btn2-edge);color:var(--color-accent-2);box-shadow:var(--lift-btn2);text-shadow:var(--emboss-light)}
+.btn-secondary:hover{background:var(--btn2-face-hover)}
+.btn-ghost:hover{background:var(--color-tint);box-shadow:var(--inset-soft)}
+.btn:active,.btn-primary:active,.btn-secondary:active{transform:translateY(1px);background:var(--btn-face-press);border-color:var(--btn-edge);color:var(--color-accent-ink);box-shadow:var(--inset-press);text-shadow:none}
+.btn:disabled{background:var(--color-paper-3);box-shadow:none;text-shadow:none}
+
+/* Label status: tinta penuh, bukan pastel */
+.tag{border-radius:2px;box-shadow:var(--edge-chip)}
+.tag-ok{background:var(--z-p);color:var(--color-accent-ink)}
+.tag-warn{background:var(--z-s);color:var(--on-z-s)}
+.tag-bad{background:var(--color-negative);color:var(--color-accent-ink)}
+.tag-info{background:var(--color-accent);color:var(--color-accent-ink)}
+.tag-mute{background:var(--color-paper-3);color:var(--color-ink)}
+
+/* Sumur: kontrol segmen dan isian */
+.seg{background:var(--well);border-color:var(--btn2-edge);box-shadow:var(--inset-soft);padding:var(--space-3xs);gap:var(--space-3xs)}
+.seg button{background:transparent;color:var(--color-ink-2);border-radius:2px}
+.seg button + button{border-left:0}
+.seg button:hover{background:var(--highlight)}
+.seg button.on{background:var(--btn-face);color:var(--color-accent-ink);box-shadow:var(--lift-btn);text-shadow:var(--deboss-dark)}
+select,input[type=number],input[type=date]{background-color:var(--color-field);border-color:var(--btn2-edge);box-shadow:var(--inset-soft)}
+
+/* Tabel */
+.tbl th{background:var(--th-face);color:var(--color-ink);border-bottom:var(--rule-hair) solid var(--sheet-edge);box-shadow:inset 0 1px 0 var(--highlight);text-shadow:var(--emboss-light)}
+.tbl td{border-bottom-color:var(--sheet-seam)}
+.tbl tbody tr:hover td{background:var(--row-hover)}
+.tbl-queue tr:first-child td{border-top:var(--rule-hair) solid var(--sheet-seam)}
+
+/* Papan komitmen */
+.grid th.z-p{background:var(--z-p-face);text-shadow:var(--deboss-dark);box-shadow:inset 0 1px 0 var(--highlight-soft)}
+.grid th.z-s{background:var(--z-s-face);text-shadow:var(--emboss-light);box-shadow:inset 0 1px 0 var(--highlight)}
+.grid th.z-g{background:var(--z-g-face);text-shadow:var(--deboss-dark);box-shadow:inset 0 1px 0 var(--highlight-soft)}
+.grid td.c{box-shadow:inset 0 1px 0 var(--highlight-soft),inset 0 -1px 0 var(--cell-shade);border-left-color:var(--sheet-seam)}
+.c-edit button:hover{box-shadow:inset 0 0 0 2px var(--color-accent),var(--inset-soft)}
+.c-out button{box-shadow:inset 0 0 0 2px var(--color-negative)}
+.row-flag td,.tbl tbody tr.row-flag:hover td{background:var(--flag-face);box-shadow:var(--inset-soft)}
+.row-edit td,.tbl tbody tr.row-edit:hover td{background:var(--color-tint);box-shadow:var(--inset-soft)}
+
+/* Batang dan meter: tertanam dengan isi berkilap */
+.bar,.meter{background:var(--well);box-shadow:var(--inset-soft);border-radius:2px;overflow:hidden}
+.s-g{background:var(--stack-g-face)}.s-j{background:var(--stack-j-face)}.s-p{background:var(--stack-p-face)}
+.bar span{box-shadow:inset 0 1px 0 var(--highlight-soft),inset -1px 0 0 var(--cell-shade)}
+.meter span{background:var(--btn-face)}
+.meter span.low{background:var(--bad-face)}
+.sw{border-radius:2px;box-shadow:var(--edge-chip)}
+
+/* Rescue */
+.case-list button{background:var(--btn2-face);border-color:var(--btn2-edge);box-shadow:var(--lift-btn2)}
+.case-list button:hover{background:var(--btn2-face-hover);border-color:var(--btn2-edge)}
+.case-list button.on{background:var(--color-tint);border-color:var(--color-accent);box-shadow:var(--inset-soft)}
+.gap-bar{box-shadow:var(--inset-soft);border-radius:2px;overflow:hidden}
+.gap-ok{background:var(--btn-face);text-shadow:var(--deboss-dark);box-shadow:inset 0 1px 0 var(--highlight-soft)}
+.gap-short{background:var(--bad-stripe);color:var(--color-negative);text-shadow:var(--emboss-light)}
+.compare thead button{background:var(--th-face);box-shadow:inset 0 1px 0 var(--highlight);text-shadow:var(--emboss-light)}
+.compare thead button:hover:not(:disabled){background:var(--btn2-face-hover)}
+.compare thead th.on button{background:var(--btn-face);box-shadow:inset 0 1px 0 var(--highlight-soft);text-shadow:var(--deboss-dark)}
+.compare td.bad{background:var(--flag-face)}
+.compare tbody th{background:var(--th-face);border-bottom-color:var(--sheet-seam)}
+.plan-box{background:var(--well);box-shadow:var(--inset-soft)}
+
+/* Panel samping dan pencarian */
+.dr{background-color:var(--color-plate);background-image:var(--grain-sheet);background-size:200px 200px;box-shadow:var(--lift-drawer)}
+.dr-head{background:var(--th-face);border-bottom-color:var(--sheet-edge);box-shadow:inset 0 1px 0 var(--highlight)}
+.note,.p-note{background:var(--well);box-shadow:var(--inset-soft);color:var(--color-ink)}
+.note-bad{background:var(--flag-face);box-shadow:var(--inset-soft)}
+.stages li{border-top-color:var(--well)}
+.cmd{background-color:var(--color-plate);box-shadow:var(--lift-drawer)}
+[data-sonner-toast][data-styled="true"]{background:var(--color-shell);color:var(--color-accent-ink);border:0;border-radius:var(--radius-card);box-shadow:var(--lift-drawer)}
+
+/* Perangkat ponsel */
+.dock{background-color:var(--color-paper-3);background-image:var(--grain-desk),var(--desk-shade);background-size:200px 200px,100% 100%;border-left:0;box-shadow:var(--inset-dock)}
+.dock-h{text-shadow:var(--emboss-light)}
+.device{border:0;padding:var(--space-xs);background:var(--device-face);border-radius:28px;box-shadow:var(--lift-device)}
+.device .portal{border-radius:20px}
+
+/* Portal */
+.portal{background-color:var(--color-paper);background-image:var(--grain-desk);background-size:200px 200px}
+.p-top{background-image:var(--grain-on-dark),var(--bar-face);background-size:200px 200px,100% 100%;box-shadow:var(--lift-bar);position:relative;z-index:1;text-shadow:var(--deboss-dark)}
+.p-card,.zone{background-color:var(--color-plate);background-image:var(--grain-sheet),var(--sheet-face);background-size:200px 200px,100% 100%;border-color:var(--sheet-edge);box-shadow:var(--lift-card)}
+.zone-h.z-p{background:var(--z-p-face);text-shadow:var(--deboss-dark)}
+.zone-h.z-s{background:var(--z-s-face);text-shadow:var(--emboss-light)}
+.zone-h.z-g{background:var(--z-g-face);text-shadow:var(--deboss-dark)}
+.p-sec{text-shadow:var(--emboss-light)}
+.p-nav{background:var(--th-face);border-top-color:var(--sheet-edge);box-shadow:var(--lift-nav);position:relative;z-index:1}
+.p-nav button{color:var(--color-ink-2);text-shadow:var(--emboss-light)}
+.p-nav button.on{color:var(--color-accent-2)}
+.p-sheet{background-color:var(--color-plate);background-image:var(--grain-sheet);background-size:200px 200px;box-shadow:var(--lift-drawer)}
+.p-grab{background:var(--btn2-edge);box-shadow:inset 0 1px 1px var(--cell-shade);border-radius:2px}
+.form .seg button.on{background:var(--btn-face)}
+
+/* Tanpa latar pucat: warna penuh atau putih bersih */
+.page-head h1,.page-head p,.field-inline,.dock-h,.p-sec{color:var(--color-accent-ink);text-shadow:var(--deboss-dark)}
+.sidenav :focus-visible,.dock-h :focus-visible,.page-head :focus-visible{outline-color:var(--color-accent-ink)}
+.tag-mute{background:var(--z-g);color:var(--color-accent-ink)}
+.btn:disabled{color:var(--color-ink)}
+.grid th.z-p,.grid th.z-p2{background:var(--z-p-head);color:var(--color-accent-ink);text-shadow:var(--deboss-dark)}
+.grid th.z-s,.grid th.z-s2{background:var(--z-s-head);color:var(--on-z-s);text-shadow:var(--emboss-light)}
+.grid th.z-g,.grid th.z-g2{background:var(--z-g-head);color:var(--color-accent-ink);text-shadow:var(--deboss-dark)}
+.grid td.c-p,.tbl tbody tr:hover td.c-p{background:var(--z-p-face);color:var(--color-accent-ink);text-shadow:var(--deboss-dark)}
+.grid td.c-s,.tbl tbody tr:hover td.c-s{background:var(--z-s-face);color:var(--on-z-s);text-shadow:var(--emboss-light)}
+.grid td.c-g,.tbl tbody tr:hover td.c-g{background:var(--z-g-face);color:var(--color-accent-ink);text-shadow:var(--deboss-dark);font-weight:700}
+.grid td.c-g .sub{color:var(--color-accent-ink);font-weight:400}
+.grid td.c{border-left:var(--rule-hair) solid var(--highlight-soft);border-bottom:var(--rule-hair) solid var(--highlight-soft)}
+.c-edit button{color:inherit;text-shadow:inherit}
+.c-edit button:hover{box-shadow:inset 0 0 0 2px var(--color-ink)}
+.grid td.c-out,.tbl tbody tr:hover td.c-out{background:var(--bad-face);color:var(--color-accent-ink);text-shadow:var(--deboss-dark)}
+.c-out button{box-shadow:none;color:var(--color-accent-ink)}
+.c-out button:hover{box-shadow:inset 0 0 0 2px var(--color-accent-ink)}
+.row-flag td,.tbl tbody tr.row-flag:hover td{background:var(--bad-face);color:var(--color-accent-ink);box-shadow:none;text-shadow:var(--deboss-dark)}
+.row-flag .btn-secondary{text-shadow:none}
+.row-edit td,.tbl tbody tr.row-edit:hover td{background:var(--color-plate);box-shadow:inset 0 0 0 2px var(--color-accent)}
+.gap-short{color:var(--color-accent-ink);text-shadow:var(--deboss-dark);box-shadow:inset 0 1px 0 var(--highlight-soft)}
+.compare td.bad{background:var(--bad-face);color:var(--color-accent-ink)}
+.note-bad{background:var(--bad-face);color:var(--color-accent-ink);box-shadow:var(--edge-chip)}
+.note,.p-note,.plan-box{background:var(--color-plate);border:var(--rule-hair) solid var(--sheet-edge);box-shadow:none}
+.plan-box{border-width:2px;border-color:var(--color-accent)}
+.case-list button.on{background:var(--btn-face);border-color:var(--btn-edge);color:var(--color-accent-ink);box-shadow:var(--lift-btn);text-shadow:var(--deboss-dark)}
+.cmd [cmdk-item][data-selected="true"]{background:var(--color-accent);color:var(--color-accent-ink)}
+.btn-ghost:hover{box-shadow:inset 0 0 0 1px var(--color-accent)}
+.stat + .stat{border-left-color:var(--sheet-seam)}
+
+/* Lebar seragam: label dan tombol sekolom mengikuti kata terpanjang */
+.tag{text-align:center}
+td > .tag{display:block}
+td:has(> .tag){width:1%;white-space:nowrap}
+.tbl-queue td:last-child{width:1%;white-space:nowrap}
+.tbl-queue td:last-child .btn{width:100%}
+.seg{display:inline-grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr)}
+.seg button{padding-inline:var(--space-md)}
+.compare{table-layout:fixed}
+.compare thead th:first-child,.compare tbody th{width:150px;white-space:normal}
+.inline-form .btn{min-width:88px}
+.kv .tag,.doc .tag{display:inline-block;min-width:144px}
+.p-between > .tag{min-width:104px}
+.zone .btn{width:100%}
+.p-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+.p-row .btn{width:100%;padding-inline:var(--space-2xs)}
+.doc > .btn,.doc > label.btn{min-width:88px}
